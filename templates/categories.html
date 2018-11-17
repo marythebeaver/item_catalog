@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+<h1>All Categories</h1>
+<a href="#">
+	<button class="btn btn-default" id="new-catolog">
+	<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add catolog
+	</button>
+</a>
+
+
+	{% for i in categories %}
+	<div>
+
+	<h2>{{i.name}}</h2>
+
+
+	<a href= '#'>See Brands</a></br>
+
+	<a href= '#'>Edit</a></br>
+
+	<a href= '#'>Delete</a></br>
+
+	</br>
+	</br>
+
+	</div>
+
+	{% endfor %}
+
+</body>
