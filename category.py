@@ -23,6 +23,14 @@ def showCategories():
     return render_template('categories.html', categories = categories)
 
 
+#Create a new category
+@app.route('/category/new/', methods=['GET','POST'])
+def newCategory():
+
+  if request.method == 'POST':
+      return "will add a new"
+  else:
+      return render_template('newCategory.html')
 
 
 
