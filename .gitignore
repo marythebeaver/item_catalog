@@ -2,3 +2,4 @@
 .vagrant/
 Vagrantfile
 pg_config.sh
+database_setup.py
