@@ -1,11 +1,19 @@
 from flask import Flask, render_template, request, redirect,jsonify, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
+from database_setup import Base, Category, Branditem, User
+
 
 app = Flask(__name__)
 
 
 
+#Connect to Database and create database session
+engine = create_engine('sqlite:///category.db')
+Base.metadata.bind = engine
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 #fake data
 category = {'id': '1', 'name': 'Independent Watchmaker'}
@@ -21,6 +29,7 @@ item = {'cat_id': '1', 'id': '1', 'brand': 'Akrivia', 'description': 'Founded by
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    categories = session.query(Category).order_by(asc(Category.name))
     return render_template('categories.html', categories = categories)
 
 
