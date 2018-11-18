@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  </head>
+    <body>
+    <h1> New Brand for {{category.name}}: </h1>
+
+    <form action="#" method = 'POST'>
+
+    <p>Name:</p>
+    <input type='text' size='30' name='brand'>
+
+    <p>Description:</p>
+    <textarea rows="5" cols="50" name="description" id="description" tabindex="12" /></textarea>
+
+    <button class="btn btn-default" id="new-brand">
+    <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add
+    </button>
+
+    </br>
+    </br>
+    <a href= '{{url_for('showBrands', category_id = category.id)}}'>Cancel</a>
+
+    </form>
+
+    </body>
+</html>
