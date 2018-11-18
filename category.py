@@ -13,8 +13,9 @@ categories = [{'id': '1', 'name': 'Independent Watchmaker'}, {
     'id': '2', 'name': 'Manufactor Watch Brand'}]
 items = [{'cat_id': '1', 'id': '1', 'brand': 'Akrivia', 'description': 'Founded by Reshep'}, {
     'cat_id': '1', 'id': '2', 'brand': 'Kari Voutilainen', 'description': 'Founded by Kari'}, {
-    'cat_id': '2', 'id': '1', 'brand': 'Patek Philippe', 'description': 'Founded by Antoni Patek and Adrien Philippe'}, {
-    'cat_id': '2', 'id': '2', 'brand': 'Rolex', 'description': 'Founded by Hans Wilsdorf'}]
+    'cat_id': '2', 'id': '3', 'brand': 'Patek Philippe', 'description': 'Founded by Antoni Patek and Adrien Philippe'}, {
+    'cat_id': '2', 'id': '4', 'brand': 'Rolex', 'description': 'Founded by Hans Wilsdorf'}]
+item = {'cat_id': '1', 'id': '1', 'brand': 'Akrivia', 'description': 'Founded by Reshep'}
 
 #show all categories
 @app.route('/')
@@ -67,6 +68,19 @@ def newBrand(category_id):
      return "this will allow you to add new brand"
   else:
      return render_template('newBrand.html', category_id = category_id, category=CategoryToBeAdd)
+
+#Edit a brand
+@app.route('/category/<int:category_id>/<int:brand_id>/edit/', methods=['GET','POST'])
+def editBrand(category_id, brand_id):
+
+    editedBrand = item
+    categoryIncludeBrand = category
+
+
+    if request.method == 'POST':
+        return "this will allow you to edit this brand"
+    else:
+        return render_template('editBrand.html', category_id = category_id, brand_id = brand_id, brand = editedBrand)
 
 
 
