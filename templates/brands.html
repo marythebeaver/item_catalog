@@ -28,7 +28,7 @@
     <p>{{i.description}}</p>
 
 
-    <a href= '#'>Edit</a>
+    <a href= '{{url_for('editBrand', category_id = category.id, brand_id = i.id, brand = i)}}'>Edit</a>
 
     </br>
     <a href = '#'>Delete</a>
