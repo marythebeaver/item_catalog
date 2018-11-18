@@ -3,6 +3,18 @@ from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Branditem, User
 
+#IMPORT FOR google login
+from flask import session as login_session
+import random, string
+
+#import for Gconnect
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
+import httplib2
+import json
+from flask import make_response
+import requests
+
 
 app = Flask(__name__)
 
