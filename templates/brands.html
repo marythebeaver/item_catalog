@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  </head>
+
+    <body>
+
+    <h1>Brands for {{category.name}} </h1>
+
+    <a href="#">
+    	<button class="btn btn-default" id="new_brand">
+    	<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add new brand
+    	</button>
+    </br>
+    </br>
+    </a>
+
+
+    <a href= '{{url_for('showCategories')}}'>See all Categories</a></br></br>
+
+    {% for i in brands %}
+
+    <div>
+
+    <h2>{{i.brand}}</h2>
+
+    <p>{{i.description}}</p>
+
+
+    <a href= '#'>Edit</a>
+
+    </br>
+    <a href = '#'>Delete</a>
+    </br>
+    </br>
+    {% endfor %}
+
+    </body>
+</html>
