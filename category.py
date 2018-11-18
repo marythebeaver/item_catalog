@@ -58,6 +58,16 @@ def showBrands(category_id):
     categorytobeshow = category
     return render_template('brands.html', brands = items, category = categorytobeshow)
 
+#Add a new brand
+@app.route('/category/<int:category_id>/new/',methods=['GET','POST'])
+def newBrand(category_id):
+  CategoryToBeAdd = category
+
+  if request.method == 'POST':
+     return "this will allow you to add new brand"
+  else:
+     return render_template('newBrand.html', category_id = category_id, category=CategoryToBeAdd)
+
 
 
 if __name__ == '__main__':
