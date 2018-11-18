@@ -20,7 +20,7 @@
 	<h2>{{i.name}}</h2>
 
 
-	<a href= '#'>See Brands</a></br>
+	<a href= '{{url_for('showBrands', category_id = i.id)}}'>See Brands</a></br>
 
 	<a href= '{{url_for('editCategory', category_id = i.id)}}'>Edit</a></br>
 
