@@ -2,4 +2,5 @@
 .vagrant/
 Vagrantfile
 pg_config.sh
-database_setup.py
+category.db
+database_setup.pyc
