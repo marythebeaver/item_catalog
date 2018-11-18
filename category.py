@@ -32,6 +32,14 @@ def newCategory():
   else:
       return render_template('newCategory.html')
 
+#Edit a category
+@app.route('/category/<int:category_id>/edit/', methods = ['GET', 'POST'])
+def editCategory(category_id):
+  editedCategory = category
+  if request.method == 'POST':
+    return "this will allow you to edit category"
+  else:
+    return render_template('editCategory.html', category = editedCategory)
 
 
 if __name__ == '__main__':
