@@ -83,6 +83,18 @@ def editBrand(category_id, brand_id):
         return render_template('editBrand.html', category_id = category_id, brand_id = brand_id, brand = editedBrand)
 
 
+#Delete a brand
+@app.route('/category/<int:category_id>/<int:brand_id>/delete/', methods = ['GET','POST'])
+def deleteBrand(category_id,brand_id):
+
+    editedBrand = item
+    categoryIncludeBrand = category
+
+    if request.method == 'POST':
+        return "this will allow you to delete this brand"
+    else:
+        return render_template('deleteBrand.html', category_id = category_id, brand_id = brand_id, brand = editedBrand)
+
 
 if __name__ == '__main__':
   app.debug = True
