@@ -51,6 +51,18 @@ def deleteCategory(category_id):
   else:
     return render_template('deleteCategory.html',category = categoryToDelete)
 
+#Show a catalog's brands
+@app.route('/restaurant/<int:restaurant_id>/')
+@app.route('/restaurant/<int:restaurant_id>/menu/')
+def showMenu(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+    creator = getUserInfo(restaurant.user_id)
+    if 'username' not in login_session:
+        return render_template('publicmenu.html', items = items, restaurant = restaurant, creator=creator)
+    return render_template('menu.html', items = items, restaurant = restaurant, creator=creator)
+
+
 
 if __name__ == '__main__':
   app.debug = True
