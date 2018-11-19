@@ -7,6 +7,15 @@
 <body>
 
 <h1>All Categories</h1>
+
+{%if 'username' not in session %}
+	<a href="{{url_for('showLogin')}}">Click Here to Login </a>
+{% else %}
+	<a href="{{url_for('gdisconnect')}}">Logout </a>
+{% endif %}
+
+</br>
+</br>
 <a href="{{url_for('newCategory')}}">
 	<button class="btn btn-default" id="new-catolog">
 	<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add catolog
