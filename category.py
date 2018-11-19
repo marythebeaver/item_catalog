@@ -205,6 +205,7 @@ def gdisconnect():
         del login_session['email']
         del login_session['picture']
         print "user loged out"
+        flash("you are successfully logged out")
         return redirect(url_for('showCategories'))
     else:
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
@@ -221,11 +222,17 @@ def showCategories():
 #Create a new category
 @app.route('/category/new/', methods=['GET','POST'])
 def newCategory():
+    if 'username' not in login_session:
+        return redirect('/login')
 
-  if request.method == 'POST':
-      return "will add a new"
-  else:
-      return render_template('newCategory.html')
+    if request.method == 'POST':
+        newCategory = Category(name = request.form['name'], user_id=login_session['user_id'])
+        session.add(newCategory)
+        flash('New Category %s Successfully Created' % newCategory.name)
+        session.commit()
+        return redirect(url_for('showCategories'))
+    else:
+        return render_template('newCategory.html')
 
 #Edit a category
 @app.route('/category/<int:category_id>/edit/', methods = ['GET', 'POST'])
