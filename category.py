@@ -121,22 +121,28 @@ def gconnect():
 
     # Get user info, sent request to google server with token to ask for user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
+    print "///////////////////////"
+    print data
+    print "///////////////////////"
 
     #put info into our data the format is defined, see https://developers.google.com/+/web/api/rest/openidconnect/getOpenIdConnect
-    login_session['username'] = str(data.get('name', False))
+    login_session['username'] = str(data.get('name', 'UnknowN'))
     login_session['picture'] = data.get('picture', False)
-    login_session['email'] = data.get('email',False)
+    login_session['gid'] = data.get('id',False)
 
     #login_session['username'] = data['name']
     #login_session['picture'] = data['picture']
     #login_session['email'] = data['email']
 
     # see if user exists, if it doesn't make a new one
-    user_id = getUserID(login_session['email'])
+    user_id = getUserID(login_session['gid'])
+
+
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
@@ -161,10 +167,10 @@ def gconnect():
 
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
+                   'gid'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
+    user = session.query(User).filter_by(email=login_session['gid']).one()
     return user.id
 
 
@@ -202,7 +208,7 @@ def gdisconnect():
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
-        del login_session['email']
+        del login_session['gid']
         del login_session['picture']
         print "user loged out"
         flash("you are successfully logged out")
@@ -243,7 +249,7 @@ def editCategory(category_id):
       message = "Sorry, the Category can only be edited by the owner"
       return message
   editedCategory = session.query(Category).filter_by(id = category_id).one()
-  user_id = getUserID(login_session['email'])
+  user_id = getUserID(login_session['gid'])
   # authorization
   if editedCategory.user_id != user_id:
       message = "Sorry, the Category can only be edited by the owner"
@@ -263,7 +269,7 @@ def deleteCategory(category_id):
       message = "Sorry, the Category can only be deleted by the owner"
       return message
   categoryToDelete = session.query(Category).filter_by(id = category_id).one()
-  user_id = getUserID(login_session['email'])
+  user_id = getUserID(login_session['gid'])
 
   # authorization
   if categoryToDelete.user_id != user_id:
@@ -298,7 +304,7 @@ def newBrand(category_id):
   #ask user to login to add new brands
   if 'username' not in login_session:
     return "Please login first"
-  user_id = getUserID(login_session['email'])
+  user_id = getUserID(login_session['gid'])
 
   # authorization
   if CategoryToBeAdd.user_id != user_id:
@@ -325,7 +331,7 @@ def editBrand(category_id, brand_id):
     if 'username' not in login_session:
         return "Please login first"
 
-    user_id = getUserID(login_session['email'])
+    user_id = getUserID(login_session['gid'])
     # authorization
     if categoryIncludeBrand.user_id != user_id:
       message = "Sorry you are not the owner, you cannot edit the item"
@@ -354,7 +360,7 @@ def deleteBrand(category_id,brand_id):
     # authorization
     if 'username' not in login_session:
         return "Please login first"
-    user_id = getUserID(login_session['email'])
+    user_id = getUserID(login_session['gid'])
     if categoryIncludeBrand.user_id != user_id:
       message = "Sorry you are not the owner, you cannot delete the item"
       return message
