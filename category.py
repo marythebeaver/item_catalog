@@ -257,10 +257,23 @@ def editCategory(category_id):
 #Delete a category
 @app.route('/category/<int:category_id>/delete/', methods = ['GET','POST'])
 def deleteCategory(category_id):
-  categoryToDelete = category
+  if 'username' not in login_session:
+      message = "Sorry, the Category can only be deleted by the owner"
+      return message
+  categoryToDelete = session.query(Category).filter_by(id = category_id).one()
+  user_id = getUserID(login_session['email'])
+
+  # authorization
+  if categoryToDelete.user_id != user_id:
+      message = "Sorry, the Category can only be edited by the owner"
+      return message
 
   if request.method == 'POST':
-    return "this will allow you to delete category"
+    session.delete(categoryToDelete)
+    flash('%s is Successfully Deleted' % categoryToDelete.name)
+    session.commit()
+    return redirect(url_for('showCategories'))
+
   else:
     return render_template('deleteCategory.html',category = categoryToDelete)
 
