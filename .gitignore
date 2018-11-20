@@ -4,3 +4,4 @@ Vagrantfile
 pg_config.sh
 category.db
 database_setup.pyc
+category.db-journal
