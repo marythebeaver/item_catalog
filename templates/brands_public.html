@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+    <body>
+
+    <h1>Brands for {{category.name}}</h2>
+      <h2>
+				<img src="{{creator.picture}}">
+				<figcaption>Category creator: {{creator.name}}</figcaption>
+    </h2>
+
+
+    <div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+    </div>
+
+
+    <a href= '{{url_for('showCategories')}}'>See all Categories</a></br></br>
+
+
+    {% for i in brands %}
+
+    <div>
+    </br>
+
+    <h2>{{i.brand}}</h2>
+
+    <p>{{i.description}}</p>
+
+    </br>
+    </br>
+    {% endfor %}
+
+    </body>
+</html>
