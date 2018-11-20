@@ -166,11 +166,11 @@ def gconnect():
 
 
 def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
+    newUser = User(name=login_session['username'], gid=login_session[
                    'gid'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    user = session.query(User).filter_by(email=login_session['gid']).one()
+    user = session.query(User).filter_by(gid=login_session['gid']).one()
     return user.id
 
 
@@ -179,9 +179,9 @@ def getUserInfo(user_id):
     return user
 
 
-def getUserID(email):
+def getUserID(gid):
     try:
-        user = session.query(User).filter_by(email=email).one()
+        user = session.query(User).filter_by(gid=gid).one()
         return user.id
     except:
         return None
