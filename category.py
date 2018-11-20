@@ -364,6 +364,27 @@ def deleteBrand(category_id,brand_id):
         return render_template('deleteBrand.html', category_id = category_id, brand_id = brand_id, brand = BrandToBeDelete)
 
 
+#JSON APIs to view Information
+@app.route('/categories/JSON')
+def showCategoriesJSON():
+    categories = session.query(Category).all()
+    return jsonify(categories= [r.serialize for r in categories])
+
+
+@app.route('/category/<int:category_id>/JSON')
+def showCategoryJSON(category_id):
+    category = session.query(Category).filter_by(id = category_id).one()
+    brands = session.query(Branditem).filter_by(cat_id = category_id).all()
+    return jsonify(brands=[i.serialize for i in brands])
+
+
+@app.route('/category/<int:category_id>/<int:brand_id>/JSON')
+def menuItemJSON(category_id, brand_id):
+    brands = session.query(Branditem).filter_by(cat_id = category_id).all()
+    brand = [i for i in brands if i.id==brand_id]
+    return jsonify(brand = [i.serialize for i in brand])
+
+
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
   app.debug = True
