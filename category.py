@@ -343,14 +343,25 @@ def editBrand(category_id, brand_id):
 #Delete a brand
 @app.route('/category/<int:category_id>/<int:brand_id>/delete/', methods = ['GET','POST'])
 def deleteBrand(category_id,brand_id):
+    BrandToBeDelete = session.query(Branditem).filter_by(id = brand_id).one()
+    categoryIncludeBrand = session.query(Category).filter_by(id = category_id).one()
 
-    editedBrand = item
-    categoryIncludeBrand = category
+    # authorization
+    if 'username' not in login_session:
+        return "Please login first"
+    user_id = getUserID(login_session['email'])
+    if categoryIncludeBrand.user_id != user_id:
+      message = "Sorry you are not the owner, you cannot delete the item"
+      return message
 
     if request.method == 'POST':
-        return "this will allow you to delete this brand"
+        session.delete(BrandToBeDelete)
+        session.commit()
+        flash('Brand is Successfully Deleted')
+        return redirect(url_for('showBrands', category_id = category_id))
+
     else:
-        return render_template('deleteBrand.html', category_id = category_id, brand_id = brand_id, brand = editedBrand)
+        return render_template('deleteBrand.html', category_id = category_id, brand_id = brand_id, brand = BrandToBeDelete)
 
 
 if __name__ == '__main__':
