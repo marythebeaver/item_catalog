@@ -276,9 +276,20 @@ def showBrands(category_id):
     brands = session.query(Branditem).filter_by(cat_id = category_id).all()
     creator = getUserInfo(categorytobeshow.user_id)
 
+
+
     if 'username' not in login_session:
         return render_template('brands_public.html', brands = brands, category = categorytobeshow, creator = creator)
+    user_id = getUserID(login_session['gid'])
 
+
+    print "///////////////"
+    print categorytobeshow.user_id
+    print user_id
+    print "//////////////"
+
+    if categorytobeshow.user_id != user_id:
+        return render_template('brands_public.html', brands = brands, category = categorytobeshow, creator = creator)
     return render_template('brands.html', brands = brands, category = categorytobeshow, creator = creator)
 
 #Add a new brand
