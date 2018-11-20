@@ -289,10 +289,26 @@ def showBrands(category_id):
 #Add a new brand
 @app.route('/category/<int:category_id>/new/',methods=['GET','POST'])
 def newBrand(category_id):
-  CategoryToBeAdd = category
+  CategoryToBeAdd = session.query(Category).filter_by(id = category_id).one()
+  #ask user to login to add new brands
+  if 'username' not in login_session:
+    return "Please login first"
+  user_id = getUserID(login_session['email'])
+
+  # authorization
+  if CategoryToBeAdd.user_id != user_id:
+      message = "Sorry you are not the owner, you cannot edit this category"
+      return message
+
 
   if request.method == 'POST':
-     return "this will allow you to add new brand"
+      newBrand = Branditem(brand = request.form['brand'],
+                    description = request.form['description'],
+                    cat_id = category_id)
+      session.add(newBrand)
+      session.commit()
+      flash('Brand %s is Successfully Added' % (newBrand.brand))
+      return redirect(url_for('showBrands', category_id = category_id))
   else:
      return render_template('newBrand.html', category_id = category_id, category=CategoryToBeAdd)
 
