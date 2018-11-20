@@ -280,9 +280,11 @@ def deleteCategory(category_id):
 #Show a category's brands
 @app.route('/category/<int:category_id>/')
 def showBrands(category_id):
-    brands = items
-    categorytobeshow = category
-    return render_template('brands.html', brands = items, category = categorytobeshow)
+    categorytobeshow = session.query(Category).filter_by(id = category_id).one()
+    brands = session.query(Branditem).filter_by(cat_id = category_id).all()
+    creator = getUserInfo(categorytobeshow.user_id)
+
+    return render_template('brands.html', brands = brands, category = categorytobeshow, creator = creator)
 
 #Add a new brand
 @app.route('/category/<int:category_id>/new/',methods=['GET','POST'])
