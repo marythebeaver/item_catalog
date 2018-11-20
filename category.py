@@ -237,6 +237,9 @@ def newCategory():
 #Edit a category
 @app.route('/category/<int:category_id>/edit/', methods = ['GET', 'POST'])
 def editCategory(category_id):
+  if 'username' not in login_session:
+      message = "Sorry, the Category can only be edited by the owner"
+      return message
   editedCategory = session.query(Category).filter_by(id = category_id).one()
   user_id = getUserID(login_session['email'])
   # authorization
