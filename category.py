@@ -282,12 +282,6 @@ def showBrands(category_id):
         return render_template('brands_public.html', brands = brands, category = categorytobeshow, creator = creator)
     user_id = getUserID(login_session['gid'])
 
-
-    print "///////////////"
-    print categorytobeshow.user_id
-    print user_id
-    print "//////////////"
-
     if categorytobeshow.user_id != user_id:
         return render_template('brands_public.html', brands = brands, category = categorytobeshow, creator = creator)
     return render_template('brands.html', brands = brands, category = categorytobeshow, creator = creator)
