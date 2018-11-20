@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+<h1>All Categories</h1>
+
+{%if 'username' not in session %}
+	<a href="{{url_for('showLogin')}}">Click Here to Login </a>
+{% else %}
+	<a href="{{url_for('gdisconnect')}}">Logout </a>
+{% endif %}
+
+</br>
+</br>
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+
+	{% for i in categories %}
+	<div>
+
+	<h2>{{i.name}}</h2>
+
+
+	<a href= '{{url_for('showBrands', category_id = i.id)}}'>See Brands</a></br>
+
+
+	</br>
+	</br>
+
+	</div>
+
+	{% endfor %}
+
+</body>
