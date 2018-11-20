@@ -315,13 +315,27 @@ def newBrand(category_id):
 #Edit a brand
 @app.route('/category/<int:category_id>/<int:brand_id>/edit/', methods=['GET','POST'])
 def editBrand(category_id, brand_id):
+    editedBrand = session.query(Branditem).filter_by(id = brand_id).one()
+    categoryIncludeBrand = session.query(Category).filter_by(id = category_id).one()
+    if 'username' not in login_session:
+        return "Please login first"
 
-    editedBrand = item
-    categoryIncludeBrand = category
-
+    user_id = getUserID(login_session['email'])
+    # authorization
+    if categoryIncludeBrand.user_id != user_id:
+      message = "Sorry you are not the owner, you cannot edit the item"
+      return message
 
     if request.method == 'POST':
-        return "this will allow you to edit this brand"
+        if request.form['brand']:
+            editedBrand.brand = request.form['brand']
+        if request.form['description']:
+            editedBrand.description = request.form['description']
+        session.add(editedBrand)
+        session.commit()
+        flash('Brand is Successfully Edited')
+        return redirect(url_for('showBrands', category_id = category_id))
+
     else:
         return render_template('editBrand.html', category_id = category_id, brand_id = brand_id, brand = editedBrand)
 
