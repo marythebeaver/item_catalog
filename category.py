@@ -31,15 +31,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-#fake data
-category = {'id': '1', 'name': 'Independent Watchmaker'}
-categories = [{'id': '1', 'name': 'Independent Watchmaker'}, {
-    'id': '2', 'name': 'Manufactor Watch Brand'}]
-items = [{'cat_id': '1', 'id': '1', 'brand': 'Akrivia', 'description': 'Founded by Reshep'}, {
-    'cat_id': '1', 'id': '2', 'brand': 'Kari Voutilainen', 'description': 'Founded by Kari'}, {
-    'cat_id': '2', 'id': '3', 'brand': 'Patek Philippe', 'description': 'Founded by Antoni Patek and Adrien Philippe'}, {
-    'cat_id': '2', 'id': '4', 'brand': 'Rolex', 'description': 'Founded by Hans Wilsdorf'}]
-item = {'cat_id': '1', 'id': '1', 'brand': 'Akrivia', 'description': 'Founded by Reshep'}
 
 #login path
 @app.route('/login')
@@ -126,22 +117,14 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
-    print "///////////////////////"
-    print data
-    print "///////////////////////"
 
-    #put info into our data the format is defined, see https://developers.google.com/+/web/api/rest/openidconnect/getOpenIdConnect
-    login_session['username'] = str(data.get('name', 'UnknowN'))
+    login_session['username'] = str(data.get('name', 'Unknown'))
     login_session['picture'] = data.get('picture', False)
     login_session['gid'] = data.get('id',False)
 
-    #login_session['username'] = data['name']
-    #login_session['picture'] = data['picture']
-    #login_session['email'] = data['email']
 
     # see if user exists, if it doesn't make a new one
     user_id = getUserID(login_session['gid'])
-
 
     if not user_id:
         user_id = createUser(login_session)
@@ -224,7 +207,8 @@ def showCategories():
     categories = session.query(Category).order_by(asc(Category.name))
     if 'username' not in login_session:
         return render_template('categories_public.html', categories = categories)
-    return render_template('categories.html', categories = categories)
+    user_id = getUserID(login_session['gid'])
+    return render_template('categories.html', categories = categories, user_id = user_id)
 
 
 #Create a new category
