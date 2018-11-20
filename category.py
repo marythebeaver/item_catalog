@@ -237,11 +237,19 @@ def newCategory():
 #Edit a category
 @app.route('/category/<int:category_id>/edit/', methods = ['GET', 'POST'])
 def editCategory(category_id):
-  editedCategory = category
+  editedCategory = session.query(Category).filter_by(id = category_id).one()
+  user_id = getUserID(login_session['email'])
+  # authorization
+  if editedCategory.user_id != user_id:
+      message = "Sorry, the Category can only be edited by the owner"
+      return message
   if request.method == 'POST':
-    return "this will allow you to edit category"
+      if request.form['name']:
+          editedCategory.name = request.form['name']
+          flash('Category is Successfully Edited: %s' % editedCategory.name)
+          return redirect(url_for('showCategories'))
   else:
-    return render_template('editCategory.html', category = editedCategory)
+      return render_template('editCategory.html', category = editedCategory)
 
 #Delete a category
 @app.route('/category/<int:category_id>/delete/', methods = ['GET','POST'])
