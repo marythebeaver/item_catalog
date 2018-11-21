@@ -47,5 +47,5 @@ The Item Catalog project is a Web application that provides a data base to allow
 - use the following command to return information of a brand in JSON:
 `http://localhost/5000/category/<int:category_id>/<int:brand_id>/JSON`
 
-##Reference
+## Reference
 - https://github.com/udacity/ud330
