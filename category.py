@@ -113,7 +113,6 @@ def gconnect():
     # The access token in the session for later use.
     login_session['provider'] = 'google'
     login_session['access_token'] = credentials.access_token
-    # login_session['credentials'] = credentials
     login_session['gplus_id'] = gplus_id
 
     # Sent request to google  with token to get user info
