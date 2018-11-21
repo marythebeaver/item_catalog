@@ -354,9 +354,6 @@ def editBrand(category_id, brand_id):
             editedBrand.brand = request.form['brand']
         if request.form['description']:
             editedBrand.description = request.form['description']
-        else:
-            return render_template('editBrand.html', category_id=category_id,
-                                   brand_id=brand_id, brand=editedBrand)
         session.add(editedBrand)
         session.commit()
         flash('Brand is Successfully Edited')
