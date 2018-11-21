@@ -7,6 +7,7 @@
    </script>
 
    <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+   <link rel=stylesheet type=text/css href="{{ url_for('static', filename = 'styles.css')}}">
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
@@ -15,9 +16,9 @@
 
 <body>
 
-
+</br></br></br></br></br></br>
 <!-- GOOGLE PLUS SIGN IN SELECT-->
-  <div id="signinButton">
+  <div style="text-align: center;" id="signinButton">
     <span class="g-signin"
       data-scope="openid"
       data-clientid="847924101620-ntqodlg5kghr5en5q6nnol8ge0lt5ubn.apps.googleusercontent.com"
@@ -48,7 +49,8 @@ function signInCallback(authResult) {
       success: function(result) {
         // Handle or verify the server response if necessary.
         if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+          $('#result').html('<div style="text-align: center;"> Login Successful!</br>'
+                            + result + '</br>Redirecting...</div>')
          setTimeout(function() {
           window.location.href = "/categories";
          }, 4000);

@@ -138,7 +138,7 @@ def gconnect():
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
-    output += '!</h1>'
+    output += '!</h1></br></br>'
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;'

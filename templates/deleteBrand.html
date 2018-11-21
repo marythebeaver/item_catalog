@@ -2,14 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename = 'styles.css')}}">
   </head>
     <body>
     <form action= "#" method = 'POST'>
 
 
-    <h1>Are you sure you want to delete {{brand.brand}}?</h1>
+    <h2>Are you sure you want to delete {{brand.brand}}?</h2></br>
 
-    <button class="btn btn-default" id="delete-brand">
+    <button class="btn_del" id="delete-brand">
   	<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>delete brand
   	</button>
     </br>

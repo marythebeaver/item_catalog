@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename = 'styles.css')}}">
   </head>
     <body>
     <h1> New Category </h1>
@@ -10,7 +11,7 @@
     <p>Name:</p>
     <input type='text' size='30' name='name'>
 
-    <button type="submit" class="btn btn-default" id="submit" type="submit">
+    <button type="submit" class="btnbtn" id="submit" type="submit">
     <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Create</button></br></br>
 
     <a href= '{{url_for('showCategories')}}'>Cancel</a>
