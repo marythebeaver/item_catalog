@@ -257,6 +257,8 @@ def editCategory(category_id):
             editedCategory.name = request.form['name']
             flash('Category is Successfully Edited: %s' % editedCategory.name)
             return redirect(url_for('showCategories'))
+        else:
+            return render_template('editCategory.html', category=editedCategory)
     else:
         return render_template('editCategory.html', category=editedCategory)
 
@@ -353,10 +355,14 @@ def editBrand(category_id, brand_id):
             editedBrand.brand = request.form['brand']
         if request.form['description']:
             editedBrand.description = request.form['description']
+        else:
+            return render_template('editBrand.html', category_id=category_id,
+                                   brand_id=brand_id, brand=editedBrand)
         session.add(editedBrand)
         session.commit()
         flash('Brand is Successfully Edited')
         return redirect(url_for('showBrands', category_id=category_id))
+
 
     else:
         return render_template('editBrand.html', category_id=category_id,
