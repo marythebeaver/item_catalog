@@ -6,17 +6,15 @@
 
 <body>
 
+	{%if 'username' not in session %}
+		<p align="right"><a href="{{url_for('showLogin')}}">Click Here to Login </a></p>
+	{% else %}
+		<p align="right"><a href="{{url_for('gdisconnect')}}">Logout </a></p>
+	{% endif %}
+
 <h1>All Categories</h1>
 
-{%if 'username' not in session %}
-	<a href="{{url_for('showLogin')}}">Click Here to Login </a>
-{% else %}
-	<a href="{{url_for('gdisconnect')}}">Logout </a>
-{% endif %}
-
 </br>
-</br>
-
 <div class = 'flash'>
 		      {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -30,6 +28,7 @@
     {% endwith %}
 
 </div>
+</br>
 
 
 <a href="{{url_for('newCategory')}}">
