@@ -325,13 +325,18 @@ def newBrand(category_id):
         return message
 
     if request.method == 'POST':
-        newBrand = Branditem(brand=request.form['brand'],
-                             description=request.form['description'],
-                             cat_id=category_id)
-        session.add(newBrand)
-        session.commit()
-        flash('Brand %s is Successfully Added' % (newBrand.brand))
-        return redirect(url_for('showBrands', category_id=category_id))
+        if request.form['brand']:
+            newBrand = Branditem(brand=request.form['brand'],
+                                 description=request.form['description'],
+                                 cat_id=category_id)
+            session.add(newBrand)
+            session.commit()
+            flash('Brand %s is Successfully Added' % (newBrand.brand))
+            return redirect(url_for('showBrands', category_id=category_id))
+        else:
+            flash('Brand cannot be empty, please enter name')
+            return redirect(url_for('newBrand', category_id=category_id,
+                                   category=CategoryToBeAdd))
     else:
         return render_template('newBrand.html', category_id=category_id,
                                category=CategoryToBeAdd)
