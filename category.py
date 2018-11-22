@@ -261,7 +261,8 @@ def editCategory(category_id):
             flash('Category is Successfully Edited: %s' % editedCategory.name)
             return redirect(url_for('showCategories'))
         else:
-            return render_template('editCategory.html', category=editedCategory)
+            return render_template(
+                            'editCategory.html', category=editedCategory)
     else:
         return render_template('editCategory.html', category=editedCategory)
 
@@ -336,7 +337,7 @@ def newBrand(category_id):
         else:
             flash('Brand cannot be empty, please enter name')
             return redirect(url_for('newBrand', category_id=category_id,
-                                   category=CategoryToBeAdd))
+                            category=CategoryToBeAdd))
     else:
         return render_template('newBrand.html', category_id=category_id,
                                category=CategoryToBeAdd)
@@ -367,7 +368,6 @@ def editBrand(category_id, brand_id):
         session.commit()
         flash('Brand is Successfully Edited')
         return redirect(url_for('showBrands', category_id=category_id))
-
 
     else:
         return render_template('editBrand.html', category_id=category_id,
