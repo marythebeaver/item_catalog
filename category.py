@@ -150,9 +150,7 @@ def gconnect():
     return output
 
 
-# User Helper Functions
-
-
+# put user's info into table when they're first login
 def createUser(login_session):
     newUser = User(name=login_session['username'], gid=login_session[
                    'gid'], picture=login_session['picture'])
@@ -162,11 +160,13 @@ def createUser(login_session):
     return user.id
 
 
+# get user's info from table User based on user's id
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
+# get user's id from table User based on google's id
 def getUserID(gid):
     try:
         user = session.query(User).filter_by(gid=gid).one()
@@ -180,12 +180,14 @@ def getUserID(gid):
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
+    # if no access_token return Current user not connected
     if access_token is None:
         print 'Access Token is None'
         response = make_response(
                         json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
+    # if access_token presence print it and send request to google revoke
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: '
     print login_session['username']
@@ -195,6 +197,7 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
     print 'result is '
     print result
+    # request sucess, clean for logout, and send message to user
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -204,6 +207,7 @@ def gdisconnect():
         print "user loged out"
         flash("you are successfully logged out")
         return redirect(url_for('showCategories'))
+    # request fail, send fail message
     else:
         response = make_response(
             json.dumps('Failed to revoke token for given user.', 400))
@@ -211,12 +215,17 @@ def gdisconnect():
         return response
 
 
+# show all categories
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    # retrieve all categories in table
     categories = session.query(Category).order_by(asc(Category.name))
+    # if user is not login show categories without edit links
     if 'username' not in login_session:
         return render_template('categories_public.html', categories=categories)
+    # if user login, show page with edit, delete, add_new links
+    # wherein, the edit and delete links only show for the creator
     user_id = getUserID(login_session['gid'])
     return render_template('categories.html',
                            categories=categories, user_id=user_id)
@@ -225,9 +234,11 @@ def showCategories():
 # Create a new category
 @app.route('/category/new/', methods=['GET', 'POST'])
 def newCategory():
+    # if user is not login, show login page
     if 'username' not in login_session:
         return redirect('/login')
-
+    # if user login and submit, add new cateory based on input
+    # if no input, show flash message to ask user for input
     if request.method == 'POST':
         if request.form['name']:
             newCategory = Category(name=request.form['name'],
@@ -239,6 +250,7 @@ def newCategory():
         else:
             flash('Name cannot be empty, please enter name')
             return redirect(url_for('newCategory'))
+    # show page before user submit
     else:
         return render_template('newCategory.html')
 
@@ -246,23 +258,34 @@ def newCategory():
 # Edit a category
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
 def editCategory(category_id):
+    # if user is not login, show error message
     if 'username' not in login_session:
         message = "Sorry, the Category can only be edited by the owner"
         return message
+    # if user login, get the category based on category_id from table
+    # and get user's id based on google id
     editedCategory = session.query(Category).filter_by(id=category_id).one()
     user_id = getUserID(login_session['gid'])
+
     # authorization
+    # show error message when user try to edit other creator's items through
+    # links
     if editedCategory.user_id != user_id:
         message = "Sorry, the Category can only be edited by the owner"
         return message
+
     if request.method == 'POST':
+        # when the create submit new name, update tale
         if request.form['name']:
             editedCategory.name = request.form['name']
             flash('Category is Successfully Edited: %s' % editedCategory.name)
             return redirect(url_for('showCategories'))
+        # when user submit empty content, stay in the page
         else:
             return render_template(
                             'editCategory.html', category=editedCategory)
+
+    # show page before user submit
     else:
         return render_template('editCategory.html', category=editedCategory)
 
@@ -270,23 +293,29 @@ def editCategory(category_id):
 # Delete a category
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_id):
+    # if user is not login, show error message
     if 'username' not in login_session:
         message = "Sorry, the Category can only be deleted by the owner"
         return message
+
+    # get user's id based on google id and the selected category from table
     categoryToDelete = session.query(Category).filter_by(id=category_id).one()
     user_id = getUserID(login_session['gid'])
 
     # authorization
+    # show error message when user try to delete other's item
     if categoryToDelete.user_id != user_id:
         message = "Sorry, the Category can only be edited by the owner"
         return message
 
+    # when the owner submit, delete the category, and redirect to main page
     if request.method == 'POST':
         session.delete(categoryToDelete)
         flash('%s is Successfully Deleted' % categoryToDelete.name)
         session.commit()
         return redirect(url_for('showCategories'))
 
+    # show delete page before user submit
     else:
         return render_template(
                     'deleteCategory.html', category=categoryToDelete)
@@ -321,10 +350,13 @@ def newBrand(category_id):
     user_id = getUserID(login_session['gid'])
 
     # authorization
+    # show error message when the user is not the creator of the category
     if CategoryToBeAdd.user_id != user_id:
         message = "Sorry you are not the owner, you cannot edit this category"
         return message
 
+    # if creator submit a new one with name, store to the table
+    # if creator submit without content, show flash mesaage to ask for content
     if request.method == 'POST':
         if request.form['brand']:
             newBrand = Branditem(brand=request.form['brand'],
@@ -338,6 +370,8 @@ def newBrand(category_id):
             flash('Brand cannot be empty, please enter name')
             return redirect(url_for('newBrand', category_id=category_id,
                             category=CategoryToBeAdd))
+
+    # show add page before submit
     else:
         return render_template('newBrand.html', category_id=category_id,
                                category=CategoryToBeAdd)
@@ -347,18 +381,27 @@ def newBrand(category_id):
 @app.route('/category/<int:category_id>/<int:brand_id>/edit/',
            methods=['GET', 'POST'])
 def editBrand(category_id, brand_id):
+    # get the brand info from table based on brand_id
+    # and get the category which includ the brand
     editedBrand = session.query(Branditem).filter_by(id=brand_id).one()
     categoryIncludeBrand = session.query(Category).\
         filter_by(id=category_id).one()
+
+    # if user is not login, show error message
     if 'username' not in login_session:
         return "Please login first"
 
+    # if user is login, get user id according to google id
     user_id = getUserID(login_session['gid'])
+
     # authorization
+    # show error message when user try to edit other's item thorugh link
     if categoryIncludeBrand.user_id != user_id:
         message = "Sorry you are not the owner, you cannot edit the item"
         return message
 
+    # update table when the creator input content
+    # and redirect to brands page and show flash message
     if request.method == 'POST':
         if request.form['brand']:
             editedBrand.brand = request.form['brand']
@@ -369,6 +412,7 @@ def editBrand(category_id, brand_id):
         flash('Brand is Successfully Edited')
         return redirect(url_for('showBrands', category_id=category_id))
 
+    # show edit page before user submit
     else:
         return render_template('editBrand.html', category_id=category_id,
                                brand_id=brand_id, brand=editedBrand)
@@ -378,36 +422,46 @@ def editBrand(category_id, brand_id):
 @app.route('/category/<int:category_id>/<int:brand_id>/delete/',
            methods=['GET', 'POST'])
 def deleteBrand(category_id, brand_id):
+    # get the brand info based on id, and get the related category
     BrandToBeDelete = session.query(Branditem).filter_by(id=brand_id).one()
     categoryIncludeBrand = session.query(Category).\
         filter_by(id=category_id).one()
 
     # authorization
+    # if user is not login, show error message
     if 'username' not in login_session:
         return "Please login first"
+
+    # if user login, get user's id based on google id
     user_id = getUserID(login_session['gid'])
+
+    # show error message when the user try to delete other creator's brand
     if categoryIncludeBrand.user_id != user_id:
         message = "Sorry you are not the owner, you cannot delete the item"
         return message
 
+    # delete item from the table when the creator submit
+    # and redirect to the brands page when flash message
     if request.method == 'POST':
         session.delete(BrandToBeDelete)
         session.commit()
         flash('Brand is Successfully Deleted')
         return redirect(url_for('showBrands', category_id=category_id))
 
+    # show delete page before user submit
     else:
         return render_template('deleteBrand.html', category_id=category_id,
                                brand_id=brand_id, brand=BrandToBeDelete)
 
 
-# JSON APIs to view Information
+# JSON APIs to view all categories' Information
 @app.route('/categories/JSON')
 def showCategoriesJSON():
     categories = session.query(Category).all()
     return jsonify(categories=[r.serialize for r in categories])
 
 
+# JSON APIs to view all brands' Information
 @app.route('/category/<int:category_id>/JSON')
 def showCategoryJSON(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
@@ -415,6 +469,7 @@ def showCategoryJSON(category_id):
     return jsonify(brands=[i.serialize for i in brands])
 
 
+# JSON APIs to view a brand's Information
 @app.route('/category/<int:category_id>/<int:brand_id>/JSON')
 def menuItemJSON(category_id, brand_id):
     brands = session.query(Branditem).filter_by(cat_id=category_id).all()
