@@ -9,12 +9,10 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-
-    id = Column(Integer, primary_key = True)
-    name =Column(String(250), nullable = False)
-    gid = Column(String(250), nullable = False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    gid = Column(String(250), nullable=False)
     picture = Column(String(250))
-
 
 
 class Category(Base):
@@ -22,47 +20,41 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    user_id = Column(Integer,ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
-#code for Json
+# code for Json
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'name'         : self.name,
-           'id'           : self.id,
-       }
+        """Return object data in easily serializeable format"""
+        return {
+           'name': self.name,
+           'id': self.id,
+           }
+
 
 class Branditem(Base):
     __tablename__ = 'brand_item'
 
-
-    id = Column(Integer, primary_key = True)
-    brand =Column(String(80), nullable = False)
+    id = Column(Integer, primary_key=True)
+    brand = Column(String(80), nullable=False)
     description = Column(String(250))
-    cat_id = Column(Integer,ForeignKey('category.id'))
+    cat_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
-    user_id = Column(Integer,ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
-#code for Json
+# code for Json
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'brand'         : self.brand,
-           'description'         : self.description,
-           'id'         : self.id,
-       }
-
-
-
-
-
+        """Return object data in easily serializeable format"""
+        return {
+               'brand': self.brand,
+               'description': self.description,
+               'id': self.id,
+               }
 
 
 engine = create_engine('sqlite:///category.db')
-
 
 Base.metadata.create_all(engine)
