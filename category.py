@@ -229,12 +229,16 @@ def newCategory():
         return redirect('/login')
 
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'],
-                               user_id=login_session['user_id'])
-        session.add(newCategory)
-        flash('New Category %s Successfully Created' % newCategory.name)
-        session.commit()
-        return redirect(url_for('showCategories'))
+        if request.form['name']:
+            newCategory = Category(name=request.form['name'],
+                                   user_id=login_session['user_id'])
+            session.add(newCategory)
+            flash('New Category %s Successfully Created' % newCategory.name)
+            session.commit()
+            return redirect(url_for('showCategories'))
+        else:
+            flash('Name cannot be empty, please enter name')
+            return redirect(url_for('newCategory'))
     else:
         return render_template('newCategory.html')
 
