@@ -10,6 +10,21 @@
     <form action="#" method = 'POST'>
 
     <p>Name:</p>
+    
+    <div class = 'flash'>
+          {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+    </div>
+
     <input type='text' size='30' name='brand'>
 
     <p>Description:</p>
